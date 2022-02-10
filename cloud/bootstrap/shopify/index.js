@@ -28,7 +28,7 @@ module.exports = {
 				let shopInstance = await shopQuery.first({ useMasterKey: true });
 				if (shopInstance) {
 					shopInstance.set('accessToken', accessToken);
-					await shopInstance.save({ useMasterKey: true });
+					await shopInstance.save(null, { useMasterKey: true });
 				} else {
 					shopInstance = parseUtils.instance('Shop');
 					shopInstance.set('shop', shop);
@@ -37,7 +37,7 @@ module.exports = {
 					acl.setPublicWriteAccess(false);
 					acl.setPublicReadAccess(false);
 					shopInstance.setACL(acl)
-					await shopInstance.save({ useMasterKey: true });
+					await shopInstance.save(null, { useMasterKey: true });
 				}
 				// const thirtyDays =  30 * 24 * 60 * 60 * 1000;
 				// res.cookie('shoplooksaccesstoken', accessToken, { maxAge: thirtyDays, path: '/', domain: '.frangout.com', httpOnly: false, secure: false, });
@@ -49,7 +49,7 @@ module.exports = {
 				res.send(`
 					<form action="/retry" method="POST">
 						<h3 style="color:red">Something went wrong.</h3>
-						<h3>Please try again or contact support at <a href="mailto:sid@frangout.com">help@berrysupport.com</a></h3>
+						<h3>Please try again or contact support at <a href="mailto:sid@frangout.com">sid@frangout.com</a></h3>
 						<input hidden type="text" name="accessToken" value="${accessToken}" />
 						<input hidden type="text" name="shop" value="${shop}" />
 						<button style="font-size:2em" type="submit">RETRY</button>
