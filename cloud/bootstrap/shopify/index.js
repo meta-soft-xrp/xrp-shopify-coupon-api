@@ -5,7 +5,7 @@ const parseUtils = require('../../utils/parse-utils');
 
 module.exports = {
 	bootstrap(app) {
-		const redirectToApp = async ({ accessToken, res, shop, hmac, code, state, host  }) => {
+		const redirectToApp = async ({ accessToken, res, shop, host  }) => {
 			try {
 				console.log(accessToken, shop)
 				const shopifyNodeInstance = shopifyInstance({
@@ -52,6 +52,7 @@ module.exports = {
 						<h3>Please try again or contact support at <a href="mailto:sid@frangout.com">sid@frangout.com</a></h3>
 						<input hidden type="text" name="accessToken" value="${accessToken}" />
 						<input hidden type="text" name="shop" value="${shop}" />
+						<input hidden type="text" name="host" value="${host}" />
 						<button style="font-size:2em" type="submit">RETRY</button>
 					</form>
 				`)
@@ -68,8 +69,8 @@ module.exports = {
 		});
 
 		app.post('/retry', (req, res) => {
-			const { accessToken, shop } = req.body;
-			redirectToApp({ accessToken, shop, res });
+			const { accessToken, shop, host } = req.body;
+			redirectToApp({ accessToken, shop, host, res });
 		});
 	}
 }
