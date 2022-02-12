@@ -10,19 +10,15 @@ module.exports = {
 		} = params;
 		if (exists(shop)) {
 			try {
-				console.log("SHOP IS ", shop);
 				const shopQuery = parseUtils.query('Shop');
 				shopQuery.equalTo('shop', shop);
 				let shopInstance = await shopQuery.first({ useMasterKey: true });
-				console.log(shopInstance)
 				if (shopInstance) {
 					const shopifyNodeInstance = shopifyInstance({
 						shopName: shop,
 						accessToken: shopInstance.get('accessToken'),
 					});
 					const existingShopifyScriptTags = await shopifyNodeInstance.scriptTag.list();
-					console.log("ENINGINNG G GG  F F ", existingShopifyScriptTags);
-					console.log(`Hiiiiiiii    ${process.env.API_SHOPLOOKS_SERVER_URL}/embed`)
 					await Promise.all(existingShopifyScriptTags.map(async tag => await shopifyNodeInstance.scriptTag.delete(tag.id)))
 					const scriptInstance = await shopifyNodeInstance.scriptTag.create({
 						event: "onload",

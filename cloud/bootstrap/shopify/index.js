@@ -17,9 +17,6 @@ module.exports = {
 				userQuery.equalTo('username', shopifyShopData.email);
 				const userInstance = await userQuery.first();
 				let userToken = '';
-
-				console.log(encrypt(shopifyShopData.email), 'asdfsadfsd');
-				console.log("USERE SIN SIDSIDJSIJ SD SD SD ", userInstance, JSON.stringify(userInstance))
 				if (!userInstance) {
 					const { sessionToken } = await user.post_user({
 						params: {
@@ -29,9 +26,7 @@ module.exports = {
 					});
 					userToken = sessionToken;
 				} else {
-					console.log("NO USERERERERERERE ", encrypt(shopifyShopData.email), shopifyShopData.email)
 					const loggedInUser = await Parse.User.logIn(shopifyShopData.email, encrypt(shopifyShopData.email));
-					console.log("LOGGINED IN USER IS ", loggedInUser, loggedInUser.get('username'), loggedInUser.get('sessionToken'))
 					userToken = loggedInUser.get('sessionToken');
 				}
 				const shopQuery = parseUtils.query('Shop');

@@ -4,7 +4,6 @@ const { exists } = require('../../utils/validate');
 const shopifyInstance = require('../../utils/shopify-instance')
 module.exports = {
 	get_products: async ({ params, user }) => {
-		console.log(params, user)
 		const {
 			ids = [], shop
 		} = params;
