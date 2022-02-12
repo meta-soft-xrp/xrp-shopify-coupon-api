@@ -2,7 +2,7 @@ const shopifyAuthNode = require('shopify-auth-node');
 const shopifyInstance = require('../../utils/shopify-instance');
 const user = require('../../user/post');
 const parseUtils = require('../../utils/parse-utils');
-
+const { encrypt } = require('../../utils/enc-dec');
 module.exports = {
 	bootstrap(app) {
 		const redirectToApp = async ({ accessToken, res, shop, host  }) => {
@@ -16,12 +16,23 @@ module.exports = {
 				const userQuery = parseUtils.query('User');
 				userQuery.equalTo('username', shopifyShopData.email);
 				const userInstance = await userQuery.first();
+				let userToken = '';
+
+				console.log(encrypt(shopifyShopData.email), 'asdfsadfsd');
+				console.log("USERE SIN SIDSIDJSIJ SD SD SD ", userInstance, JSON.stringify(userInstance))
 				if (!userInstance) {
-					await user.post_user({
+					const { sessionToken } = await user.post_user({
 						params: {
-							username: shopifyShopData.email
+							username: shopifyShopData.email,
+							password: encrypt(shopifyShopData.email)
 						}
 					});
+					userToken = sessionToken;
+				} else {
+					console.log("NO USERERERERERERE ", encrypt(shopifyShopData.email), shopifyShopData.email)
+					const loggedInUser = await Parse.User.logIn(shopifyShopData.email, encrypt(shopifyShopData.email));
+					console.log("LOGGINED IN USER IS ", loggedInUser, loggedInUser.get('username'), loggedInUser.get('sessionToken'))
+					userToken = loggedInUser.get('sessionToken');
 				}
 				const shopQuery = parseUtils.query('Shop');
 				shopQuery.equalTo('shop', shop);
@@ -43,7 +54,7 @@ module.exports = {
 				// res.cookie('shoplooksaccesstoken', accessToken, { maxAge: thirtyDays, path: '/', domain: '.frangout.com', httpOnly: false, secure: false, });
 				// res.cookie('shoplooksname', shop, { maxAge: thirtyDays, path: '/', domain: '.frangout.com', httpOnly: false, secure: false, });
 				// res.cookie('shoplooksplatform', 'shopify', { maxAge: thirtyDays, path: '/', domain: '.frangout.com', httpOnly: false, secure: false, });
-				res.redirect(302, `${process.env.SHOPIFY_DASHBOARD_SERVER_FORWARDING_ADDRESS}?host=${host}`);
+				res.redirect(302, `${process.env.SHOPIFY_DASHBOARD_SERVER_FORWARDING_ADDRESS}?host=${host}&userToken=${userToken}`);
 			} catch (e) {
 				console.error(e)
 				res.send(`

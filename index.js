@@ -35,16 +35,23 @@ app.get('/embed', (req, res) => {
 	
 	res.set('Content-Type', 'text/javascript');
 	res.send(`
-			const footerDiv = document.querySelector('#shopify-section-footer');
-			const footerElement = document.querySelector('footer');
-			const footerToPrepend = footerDiv || footerElement;
 			const iframe = document.createElement('iframe');
 			iframe.src = "${process.env.EMBED_SCRIPT_TAG_URL}?shop=${shop}";
 			iframe.style.border = "none";
 			iframe.width = "100%";
 			iframe.height = "600px"
-			if (footerToPrepend) {
-				footerToPrepend.prepend(iframe)
+			const shopLookAppEle = document.querySelector('#frangout-shop-look-app');
+			if (shopLookAppEle) {
+				shopLookAppEle.style.width = "100%";
+				shopLookAppEle.style.height = "600px";
+				shopLookAppEle.appendChild(iframe);
+			} else if (document.location.pathname === "/") {
+				const footerDiv = document.querySelector('#shopify-section-footer');
+				const footerElement = document.querySelector('footer');
+				const footerToPrepend = footerDiv || footerElement;
+				if (footerToPrepend) {
+					footerToPrepend.prepend(iframe)
+				}
 			}
 	`)
 });

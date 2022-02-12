@@ -1,16 +1,14 @@
 const errors = require("../../utils/error-handling/index");
-const parseUtils = require("../../utils/parse-utils/index");
-const generator = require("generate-password");
 const { exists } = require('../../utils/validate')
 module.exports = {
 	post_user: async ({ params }) => {
 		const {
-			username
+			username,
+			password
 		} = params;
-		if (exists(username)) {
+		if (exists(username, password)) {
 			try {
 				const user = new Parse.User();
-				const password = generator.generate({ length: 25, numbers: true });
 				const signedUpUser = await user.signUp({
 					username,
 					password,
