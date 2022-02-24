@@ -22,7 +22,7 @@ module.exports = {
 					await Promise.all(existingShopifyScriptTags.map(async tag => await shopifyNodeInstance.scriptTag.delete(tag.id)))
 					const scriptInstance = await shopifyNodeInstance.scriptTag.create({
 						event: "onload",
-						src: `${process.env.API_SHOPLOOKS_SERVER_URL}/embed` // dont add ?shop query param here as Shopify will add by default
+						src: `${process.env.API_SHOPLOOKS_SERVER_URL}/widget` // dont add ?shop query param here as Shopify will add by default
 					});
 					return scriptInstance;
 				} else {

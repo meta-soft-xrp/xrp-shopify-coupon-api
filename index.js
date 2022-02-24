@@ -59,7 +59,7 @@ app.get(SHOPIFY_WEBHOOK_GDPR_SHOP_REDACT, (req, res) => req.custom_shopify_verif
 
 const PARSE_SERVER_API = parseServer.bootstrap();
 app.use('/parse', PARSE_SERVER_API);
-app.get('/embed', (req, res) => {
+app.get('/widget', (req, res) => {
 	const { shop } = req.query;
 	
 	res.set('Content-Type', 'text/javascript');
