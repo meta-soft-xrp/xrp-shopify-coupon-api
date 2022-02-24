@@ -10,7 +10,7 @@ const path = require('path');
 const routeCache = require('route-cache');
 const parseServer = require('./cloud/bootstrap/parse-server');
 const shopify = require('./cloud/bootstrap/shopify');
-
+const fs = require('fs');
 const app = express();
 app.use(cookieParser());
 app.options('*', cors({
@@ -25,11 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 shopify.bootstrap(app);
 const PARSE_SERVER_API = parseServer.bootstrap();
 app.use('/parse', PARSE_SERVER_API);
-
-app.get('/', (req, res) => {
-	res.status(200).send('OK RUNNING');
-});
-
 app.get('/embed', (req, res) => {
 	const { shop } = req.query;
 	
@@ -54,6 +49,15 @@ app.get('/embed', (req, res) => {
 				}
 			}
 	`)
+});
+
+
+app.get('*', (req, res) => {
+	const indexFilePath = path.join(__dirname, '.', 'index.html');
+	res.set("Content-Security-Policy", `frame-ancestors ${req.headers.host} https://admin.shopify.com`);
+	fs.readFile(indexFilePath, 'utf8', function (err, data) {
+		res.send(data)
+	});
 });
 
 app.listen(process.env.API_APP_PORT, function () {
