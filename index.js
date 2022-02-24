@@ -50,12 +50,11 @@ app.get('/embed', (req, res) => {
 			}
 	`)
 });
-https://shopify-dev.myshopify.com https://admin.shopify.com
 
 app.get('*', (req, res) => {
-	console.log(req)
+	const { shop = '' } = req.query
 	const indexFilePath = path.join(__dirname, '.', 'index.html');
-	res.set("Content-Security-Policy", `frame-ancestors https://dev-lookbook-frangout.myshopify.com https://admin.shopify.com`);
+	res.set("Content-Security-Policy", `frame-ancestors ${shop} ${req.headers.host} https://admin.shopify.com`);
 	fs.readFile(indexFilePath, 'utf8', function (err, data) {
 		res.send(data)
 	});
