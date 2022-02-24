@@ -48,12 +48,12 @@ function verifyShopifyWebhookRequest(req, res, buf, encoding) {
 
 shopify.bootstrap(app);
 app.use('/shopify/webhooks', bodyParser.json({ verify: verifyShopifyWebhookRequest }));
-app.post(SHOPIFY_WEBHOOK_GDPR_CUSTOMERS_REDACT, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(400));
-app.post(SHOPIFY_WEBHOOK_GDPR_CUSTOMERS_DATA_REQUEST, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(400));
-app.post(SHOPIFY_WEBHOOK_GDPR_SHOP_REDACT, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(400));
-app.get(SHOPIFY_WEBHOOK_GDPR_CUSTOMERS_REDACT, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(400));
-app.get(SHOPIFY_WEBHOOK_GDPR_CUSTOMERS_DATA_REQUEST, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(400));
-app.get(SHOPIFY_WEBHOOK_GDPR_SHOP_REDACT, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(400));
+app.post(SHOPIFY_WEBHOOK_GDPR_CUSTOMERS_REDACT, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(401));
+app.post(SHOPIFY_WEBHOOK_GDPR_CUSTOMERS_DATA_REQUEST, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(401));
+app.post(SHOPIFY_WEBHOOK_GDPR_SHOP_REDACT, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(401));
+app.get(SHOPIFY_WEBHOOK_GDPR_CUSTOMERS_REDACT, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(401));
+app.get(SHOPIFY_WEBHOOK_GDPR_CUSTOMERS_DATA_REQUEST, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(401));
+app.get(SHOPIFY_WEBHOOK_GDPR_SHOP_REDACT, (req, res) => req.custom_shopify_verified ? res.sendStatus(200) : res.sendStatus(401));
 
 
 
@@ -88,7 +88,7 @@ app.get('/embed', (req, res) => {
 app.get('*', (req, res) => {
 	const { shop = '' } = req.query
 	const indexFilePath = path.join(__dirname, '.', 'index.html');
-	res.set("Content-Security-Policy", `frame-ancestors ${shop} https://admin.shopify.com`);
+	res.set("Content-Security-Policy", `frame-ancestors ${shop} https://admin.shopify.com;`);
 	fs.readFile(indexFilePath, 'utf8', function (err, data) {
 		res.send(data)
 	});
