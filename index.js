@@ -88,7 +88,7 @@ app.get('/widget', (req, res) => {
 app.get('*', (req, res) => {
 	const { shop = '' } = req.query
 	const indexFilePath = path.join(__dirname, '.', 'index.html');
-	res.set("Content-Security-Policy", `frame-ancestors http://${shop} https://admin.shopify.com`);
+	res.set("Content-Security-Policy", `frame-ancestors https://${shop} https://admin.shopify.com`);
 	fs.readFile(indexFilePath, 'utf8', function (err, data) {
 		res.send(data)
 	});
