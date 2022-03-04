@@ -68,11 +68,11 @@ app.get('/widget', (req, res) => {
 			iframe.src = "${process.env.EMBED_SCRIPT_TAG_URL}?shop=${shop}";
 			iframe.style.border = "none";
 			iframe.width = "100%";
-			iframe.height = "600px"
+			iframe.height = "672px"
 			const shopLookAppEle = document.querySelector('#frangout-shop-look-app');
 			if (shopLookAppEle) {
 				shopLookAppEle.style.width = "100%";
-				shopLookAppEle.style.height = "600px";
+				shopLookAppEle.style.height = "672px";
 				shopLookAppEle.appendChild(iframe);
 			} else if (document.location.pathname === "/") {
 				const footerDiv = document.querySelector('#shopify-section-footer');
