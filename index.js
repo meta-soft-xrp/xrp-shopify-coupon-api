@@ -79,7 +79,7 @@ app.get('/widget', (req, res) => {
 				const footerElement = document.querySelector('footer');
 				const footerToPrepend = footerDiv || footerElement;
 				if (footerToPrepend) {
-					footerToPrepend.prepend(iframe)
+					footerToPrepend.insertAdjacentElement("beforeBegin", iframe);
 				}
 			}
 	`)
