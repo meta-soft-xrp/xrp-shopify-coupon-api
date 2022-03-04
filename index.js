@@ -77,9 +77,18 @@ app.get('/widget', (req, res) => {
 			} else if (document.location.pathname === "/") {
 				const footerDiv = document.querySelector('#shopify-section-footer');
 				const footerElement = document.querySelector('footer');
+				const mainDiv = document.querySelector("#MainContent");
+				const mainElement = document.querySelector('main');
+				
 				const footerToPrepend = footerDiv || footerElement;
+				const mainToPrepend = mainDiv || mainElement;
+
 				if (footerToPrepend) {
 					footerToPrepend.insertAdjacentElement("beforeBegin", iframe);
+				} else if (mainToPrepend) {
+					mainToPrepend.insertAdjacentElement("beforeBegin", iframe);
+				} else {
+					document.body.appendChild(iframe)
 				}
 			}
 	`)
