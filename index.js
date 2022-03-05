@@ -16,17 +16,21 @@ const routeCache = require('route-cache');
 const parseServer = require('./cloud/bootstrap/parse-server');
 const shopify = require('./cloud/bootstrap/shopify');
 const fs = require('fs');
+const { get_looks } = require("./cloud/looks/get");
+const { post_looks } = require("./cloud/looks/post");
+const { destroy_looks } = require("./cloud/looks/destroy");
+const { post_scripts } = require("./cloud/scripts/post");
+const { destroy_scripts } = require("./cloud/scripts/destroy");
 const app = express();
 app.use(cookieParser());
-app.options('*', cors({
-	origin: '*',
-	credentials: true,
-}));
+
 app.use(bodyParser.json({ }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.raw({ limit: '100mb' }))
 app.use(express.static(path.join(__dirname, 'public')))
-
+app.use(cors({
+	origin: '*'
+}));
 function hmac256Validation({ hmac, rawBody }) {
 	// Use raw-body to get the body (buffer)
 	const hash = crypto
@@ -93,6 +97,69 @@ app.get('/widget', (req, res) => {
 			}
 	`)
 });
+
+app.get('/api/get_looks', async (req, res) => {
+	try {
+		const { shop, id } = req.query;
+		const data = await get_looks({
+			params: { shop, id }
+		});
+		res.status(200).json(data);
+	} catch (e) {
+		res.status(e.code).json(e);
+	}
+})
+
+app.post('/api/post_looks', async (req, res) => {
+	try {
+		const { shop, name, medias, products } = req.body;
+		const data = await post_looks({
+			params: {  shop, name, medias, products }
+		});
+		res.status(200).json(data);
+	} catch (e) {
+		res.status(e.code).json(e);
+	}
+})
+
+app.delete('/api/destroy_looks', async (req, res) => {
+	try {
+		const { id } = req.query;
+		const data = await destroy_looks({
+			params: { id }
+		});
+		res.status(200).json(data);
+	} catch (e) {
+		res.status(e.code).json(e);
+	}
+})
+
+app.post('/api/post_scripts', async (req, res) => {
+	try {
+		console.log("hererer ", req.body)
+		const { shop } = req.body;
+		const data = await post_scripts({
+			params: { shop }
+		});
+		res.status(200).json(data);
+	} catch (e) {
+		res.status(e.code).json(e);
+	}
+})
+
+app.delete('/api/destroy_scripts', async (req, res) => {
+	try {
+		const { shop } = req.query;
+		const data = await destroy_scripts({
+			params: { shop }
+		});
+		res.status(200).json(data);
+	} catch (e) {
+		res.status(e.code).json(e);
+	}
+})
+
+
 
 app.get('*', (req, res) => {
 	const { shop = '' } = req.query
