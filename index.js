@@ -112,9 +112,9 @@ app.get('/api/get_looks', async (req, res) => {
 
 app.post('/api/post_looks', async (req, res) => {
 	try {
-		const { shop, name, medias, products } = req.body;
+		const { shop, name, medias, products, id } = req.body;
 		const data = await post_looks({
-			params: {  shop, name, medias, products }
+			params: {  shop, name, medias, products, id }
 		});
 		res.status(200).json(data);
 	} catch (e) {
@@ -136,7 +136,6 @@ app.delete('/api/destroy_looks', async (req, res) => {
 
 app.post('/api/post_scripts', async (req, res) => {
 	try {
-		console.log("hererer ", req.body)
 		const { shop } = req.body;
 		const data = await post_scripts({
 			params: { shop }
