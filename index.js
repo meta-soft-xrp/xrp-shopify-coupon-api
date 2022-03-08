@@ -113,9 +113,9 @@ app.get('/api/get_looks', async (req, res) => {
 
 app.get('/api/get_products', async (req, res) => {
 	try {
-		const { shop, ids } = req.query;
+		const { shop, ids = '' } = req.query;
 		const data = await get_products({
-			params: { shop, ids }
+			params: { shop, ids: ids.split(',') }
 		});
 		res.status(200).json(data);
 	} catch (e) {
