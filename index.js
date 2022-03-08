@@ -21,6 +21,7 @@ const { post_looks } = require("./cloud/looks/post");
 const { destroy_looks } = require("./cloud/looks/destroy");
 const { post_scripts } = require("./cloud/scripts/post");
 const { destroy_scripts } = require("./cloud/scripts/destroy");
+const { get_products } = require("./cloud/products/get");
 const app = express();
 app.use(cookieParser());
 
@@ -109,6 +110,18 @@ app.get('/api/get_looks', async (req, res) => {
 		res.status(e.code).json(e);
 	}
 })
+
+app.get('/api/get_products', async (req, res) => {
+	try {
+		const { shop, ids } = req.query;
+		const data = await get_products({
+			params: { shop, ids }
+		});
+		res.status(200).json(data);
+	} catch (e) {
+		res.status(e.code).json(e);
+	}
+});
 
 app.post('/api/post_looks', async (req, res) => {
 	try {
