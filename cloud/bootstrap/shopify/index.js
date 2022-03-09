@@ -67,7 +67,7 @@ module.exports = {
 		
 		shopifyAuthNode.bootstrap({
 			app,
-			shopifyAppScopes: 'read_script_tags,write_script_tags',
+			shopifyAppScopes: 'read_script_tags,write_script_tags,read_products',
 			shopifyApiKey: process.env.SHOPIFY_API_KEY,
 			shopifyApiSecret: process.env.SHOPIFY_API_SECRET,
 			shopifyAppUri: process.env.SHOPIFY_DASHBOARD_SERVER_FORWARDING_ADDRESS,
