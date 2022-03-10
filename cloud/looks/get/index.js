@@ -15,7 +15,6 @@ module.exports = {
 				const fud = id ? looksQuery.equalTo('objectId', id) : null;
 				// const data = id ? await looksQuery.first(Parse.User.current()) :  await looksQuery.find(Parse.User.current());
 				const data = id ? await looksQuery.first() :  await looksQuery.find();
-				console.log("data is ", data)
 				if (id && data.get('products').length) {
 					const { data: products } = await Parse.Cloud.run('get_products', {
 						shop: shop,

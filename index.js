@@ -22,6 +22,7 @@ const { destroy_looks } = require("./cloud/looks/destroy");
 const { post_scripts } = require("./cloud/scripts/post");
 const { destroy_scripts } = require("./cloud/scripts/destroy");
 const { get_products } = require("./cloud/products/get");
+const { get_scripts } = require("./cloud/scripts/get");
 const app = express();
 app.use(cookieParser());
 
@@ -171,12 +172,26 @@ app.delete('/api/destroy_scripts', async (req, res) => {
 	}
 })
 
+app.get('/api/get_scripts', async (req, res) => {
+	try {
+		const { shop } = req.query;
+		const data = await get_scripts({
+			params: { shop }
+		});
+		res.status(200).json(data);
+	} catch (e) {
+		res.status(e.code).json(e);
+	}
+})
+
 
 
 app.get('*', (req, res) => {
-	const { shop = '' } = req.query
+	const { shop = '', session } = req.query
+	if (shop && session) {
+		res.set("Content-Security-Policy", `frame-ancestors https://${shop} https://admin.shopify.com`);
+	}
 	const indexFilePath = path.join(__dirname, '.', 'index.html');
-	res.set("Content-Security-Policy", `frame-ancestors https://${shop} https://admin.shopify.com`);
 	fs.readFile(indexFilePath, 'utf8', function (err, data) {
 		res.send(data)
 	});
