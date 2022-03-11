@@ -75,7 +75,6 @@ app.get('/widget', (req, res) => {
 			iframe.style.border = "none";
 			iframe.width = "100%";
 			iframe.height = "672px"
-			iframe.id = "frangout-shop-look-app-wrapper"
 			const shopLookAppEle = document.querySelector('#frangout-shop-look-app');
 			if (shopLookAppEle) {
 				shopLookAppEle.style.width = "100%";
@@ -97,6 +96,9 @@ app.get('/widget', (req, res) => {
 				} else {
 					document.body.appendChild(iframe)
 				}
+			}
+			if (document.location.hash === "#frangout-shop-look-app-wrapper") {
+				iframe.scrollIntoView({ behaviour: 'smooth' })
 			}
 	`)
 });
