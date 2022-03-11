@@ -75,6 +75,7 @@ app.get('/widget', (req, res) => {
 			iframe.style.border = "none";
 			iframe.width = "100%";
 			iframe.height = "672px"
+			iframe.id = "frangout-shop-look-app-wrapper"
 			const shopLookAppEle = document.querySelector('#frangout-shop-look-app');
 			if (shopLookAppEle) {
 				shopLookAppEle.style.width = "100%";
