@@ -22,7 +22,7 @@ module.exports = {
 							if (typeof p === "string") {
 								return p.split('/')?.pop()
 							}
-							return undefined
+							return undefined 
 						}).filter(Boolean)
 					});
 					data.set('products', products);

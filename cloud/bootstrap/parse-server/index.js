@@ -3,17 +3,17 @@ const S3Adapter = require("@parse/s3-files-adapter");
 const AWS = require("aws-sdk");
 
 module.exports = {
-	bootstrap() {
+	bootstrap() { 
 		const s3Options = {
 			bucket: process.env.S3_BUCKET_NAME,
 			baseUrl: null,
-			region: process.env.S3_REGION,
+			region: process.env.S3_REGION, 
 			directAccess: true,
 			bucketPrefix: process.env.S3_BUCKET_PREFIX,
 			globalCacheControl: 'public, max-age=31536000'
 		};
 		const s3Adapter = new S3Adapter(s3Options);
-		const api = new ParseServer({
+		const api = new ParseServer({ 
 			databaseURI: process.env.API_SHOPLOOKS_DATABASE_URI,
 			cloud: __dirname + '/main.js',
 			appId: process.env.API_SHOPLOOKS_PARSE_APP_ID,

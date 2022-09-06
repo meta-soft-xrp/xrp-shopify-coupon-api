@@ -1,8 +1,8 @@
 const shopifyAuthNode = require('shopify-auth-node');
 const shopifyInstance = require('../../utils/shopify-instance');
 const user = require('../../user/post');
-const parseUtils = require('../../utils/parse-utils');
-const { encrypt } = require('../../utils/enc-dec');
+const parseUtils = require('../../utils/parse-utils'); 
+const { encrypt } = require('../../utils/enc-dec'); 
 module.exports = {
 	bootstrap(app) {
 		const redirectToApp = async ({ accessToken, res, shop, host  }) => {

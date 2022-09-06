@@ -9,7 +9,7 @@ module.exports = {
 		if (exists(username, password)) {
 			try {
 				const user = new Parse.User();
-				const signedUpUser = await user.signUp({
+				const a = await user.signUp({
 					username,
 					password,
 				});

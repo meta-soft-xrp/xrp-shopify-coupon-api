@@ -12,7 +12,7 @@ const SHOPIFY_WEBHOOK_APP_UNISTALLED = "/shopify/webhooks/app/uninstalled";
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
+const bodyParser = require("body-parser"); 
 const path = require("path");
 const routeCache = require("route-cache");
 const parseServer = require("./cloud/bootstrap/parse-server");
@@ -33,6 +33,7 @@ const {
   post_charges,
   delete_charges,
 } = require("./cloud/charges/get");
+const { get_xrp_payment } = require("./cloud/xrp-payment/get");
 
 const app = express();
 app.use(cookieParser());
@@ -155,12 +156,25 @@ app.get("/api/get_looks", async (req, res) => {
   }
 });
 
+app.get('/api/get_xrp_payment', async (req, res) => {
+  try{
+    const { shop, id } = req.query;
+    const data = await get_xrp_payment({
+      params: { shop, id },
+    })
+    res.status(200).json(data);
+  }catch (e){
+    res.status(e.code).json(e);
+  }
+});
+
 app.get("/api/get_products", async (req, res) => {
   try {
     const { shop, ids = "" } = req.query;
     const data = await get_products({
       params: { shop, ids: ids.split(",") },
     });
+
     res.status(200).json(data);
   } catch (e) {
     res.status(e.code).json(e);
@@ -169,9 +183,9 @@ app.get("/api/get_products", async (req, res) => {
 
 app.post("/api/post_looks", async (req, res) => {
   try {
-    const { shop, name, medias, products, id } = req.body;
+    const { shop, name, price, medias, products, id } = req.body;
     const data = await post_looks({
-      params: { shop, name, medias, products, id },
+      params: { shop, name, price, medias, products, id },
     });
     res.status(200).json(data);
   } catch (e) {

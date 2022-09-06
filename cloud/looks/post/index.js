@@ -7,17 +7,19 @@ module.exports = {
 		const {
 			shop,
 			name,
+			price,
 			medias,
 			products,
 			id = '',
 		} = params;
-		if (exists(shop)) {
+		if (exists(shop)) { 
 			try {
 				const looksInstance = parseUtils.instance('Looks')
 				if (id) {
 					looksInstance.id = id;
 				}
 				looksInstance.set('name', name);
+				looksInstance.set('price', price);
 				looksInstance.set('medias', medias);
 				looksInstance.set('products', products);
 				looksInstance.set('shop', shop);
