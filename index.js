@@ -12,7 +12,7 @@ const SHOPIFY_WEBHOOK_APP_UNISTALLED = "/shopify/webhooks/app/uninstalled";
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser"); 
+const bodyParser = require("body-parser");
 const path = require("path");
 const routeCache = require("route-cache");
 const parseServer = require("./cloud/bootstrap/parse-server");
@@ -34,6 +34,7 @@ const {
   delete_charges,
 } = require("./cloud/charges/get");
 const { get_xrp_payment } = require("./cloud/xrp-payment/get");
+const { put_shop } = require("./cloud/shop/put");
 
 const app = express();
 app.use(cookieParser());
@@ -156,14 +157,14 @@ app.get("/api/get_looks", async (req, res) => {
   }
 });
 
-app.get('/api/get_xrp_payment', async (req, res) => {
-  try{
+app.get("/api/get_xrp_payment", async (req, res) => {
+  try {
     const { shop, id } = req.query;
     const data = await get_xrp_payment({
       params: { shop, id },
-    })
+    });
     res.status(200).json(data);
-  }catch (e){
+  } catch (e) {
     res.status(e.code).json(e);
   }
 });
@@ -307,6 +308,20 @@ app.post("/api/delete_charges", async (req, res) => {
   }
 });
 
+app.post("/api/put_shop", async (req, res) => {
+  try {
+    const { shop, walletAddress } = req.body;
+
+    const data = await put_shop({
+      params: { shop, walletAddress },
+    });
+    res.status(200).json(data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json(e);
+  }
+});
+
 app.get("*", (req, res) => {
   const { shop = "", session } = req.query;
   if (shop && session) {
@@ -316,7 +331,7 @@ app.get("*", (req, res) => {
     );
   }
   const indexFilePath = path.join(__dirname, ".", "index.html");
-  fs.readFile(indexFilePath, "utf8", function(err, data) {
+  fs.readFile(indexFilePath, "utf8", function (err, data) {
     if (shop && session) {
       data = data.replace(
         "<!--__SHELL_HTML_CONTENT__-->",
@@ -327,11 +342,11 @@ app.get("*", (req, res) => {
   });
 });
 
-app.listen(process.env.API_APP_PORT, function() {
+app.listen(process.env.API_APP_PORT, function () {
   console.log("READY");
 });
 // ParseServer.createLiveQueryServer(httpServer);
-process.on("SIGINT", function() {
+process.on("SIGINT", function () {
   console.log("SIGINT");
   process.exit();
 });
