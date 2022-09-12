@@ -6,7 +6,7 @@ module.exports = {
 	},
 	instance(className) {
 		const instance = Parse.Object.extend(className);
-		return new instance();
+		return new instance(); 
 	},
 	pointer(className, id) {
 		const parseClass = Parse.Object.extend(className);

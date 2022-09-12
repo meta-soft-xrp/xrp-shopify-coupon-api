@@ -10,7 +10,7 @@ module.exports = {
 		if (exists(shop)) {
 			try {
 				const looksQuery = parseUtils.query('Looks');
-				looksQuery.equalTo('shop', shop);
+				looksQuery.equalTo('shop', shop); 
 				looksQuery.descending('createdAt');
 				const fud = id ? looksQuery.equalTo('objectId', id) : null;
 				// const data = id ? await looksQuery.first(Parse.User.current()) :  await looksQuery.find(Parse.User.current());
@@ -19,7 +19,7 @@ module.exports = {
 					const { data: products } = await Parse.Cloud.run('get_products', {
 						shop: shop,
 						ids: data.get('products').map(p => {
-							if (typeof p === "string") {
+							if (typeof p === "string") { 
 								return p.split('/')?.pop()
 							}
 							return undefined 

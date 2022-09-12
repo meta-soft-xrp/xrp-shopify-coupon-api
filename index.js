@@ -35,6 +35,7 @@ const {
 } = require("./cloud/charges/get");
 const { get_xrp_payment } = require("./cloud/xrp-payment/get");
 const { put_shop } = require("./cloud/shop/put");
+const { get_shop } = require("./cloud/shop/get");
 
 const app = express();
 app.use(cookieParser());
@@ -307,6 +308,17 @@ app.post("/api/delete_charges", async (req, res) => {
     res.status(500).json(e);
   }
 });
+
+app.get('/api/get_shop', async (req, res) => {
+  try{
+    const { shop, walletAddress = '' } = req.query;
+    const data = await get_shop({
+      params: { shop, walletAddress }
+    })
+  } catch(e){
+    res.status(500).json(e);
+  }
+})
 
 app.post("/api/put_shop", async (req, res) => {
   try {

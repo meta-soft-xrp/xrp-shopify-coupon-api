@@ -8,8 +8,9 @@ module.exports = {
     if (exists(shop)) {
       try {
         const shopQuery = parseUtils.query("Shop");
-        const shopInstance = shopQuery.first("shop", shop);
-        if (shopInstance) {
+        shopQuery.equalTo("shop", shop);
+        const shopInstance = await shopQuery.first({ useMasterKey: true });
+        if (shopInstance && walletAddress) {
           shopInstance.set("walletAddress", walletAddress);
           const savedShopInstance = await shopInstance.save(null, {
             useMasterKey: true,

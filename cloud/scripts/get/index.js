@@ -24,7 +24,7 @@ module.exports = {
 					const { code, message } = errors.constructErrorObject(400);
 					throw new Parse.Error(code, message);
 				}				
-			} catch (e) {
+			} catch (e) { 
 				throw e;
 			}
 		} else {

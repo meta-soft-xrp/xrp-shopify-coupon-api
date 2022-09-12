@@ -33,6 +33,7 @@ module.exports = {
 				// }
 				// const data = await looks.save(null, Parse.User.current());
 				const data = await looksInstance.save(null);
+				return data;
 			} catch (e) {
 				throw e;
 			}
