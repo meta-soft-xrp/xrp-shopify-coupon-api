@@ -7,7 +7,7 @@ module.exports = {
 	get_scripts: async ({ params, user }) => {
 		const {
 			shop
-		} = params;
+		} = params; 
 		if (exists(shop)) {
 			try {
 				const shopQuery = parseUtils.query('Shop');

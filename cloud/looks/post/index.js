@@ -8,10 +8,12 @@ module.exports = {
 			shop,
 			name,
 			price,
+			xrpPrice,
 			medias,
 			products,
 			id = '',
 		} = params;
+		console.log('XRP', xrpPrice);
 		if (exists(shop)) { 
 			try {
 				const looksInstance = parseUtils.instance('Looks')
@@ -20,6 +22,7 @@ module.exports = {
 				}
 				looksInstance.set('name', name);
 				looksInstance.set('price', price);
+				looksInstance.set('xrpPrice', parseFloat(xrpPrice));
 				looksInstance.set('medias', medias);
 				looksInstance.set('products', products);
 				looksInstance.set('shop', shop);

@@ -3,7 +3,7 @@ const parseUtils = require("../../utils/parse-utils/index");
 const { exists } = require("../../utils/validate");
 const shopifyInstance = require("../../utils/shopify-instance");
 const { XummSdk } = require("xumm-sdk");
-const { Xrpl, xrpToDrops } = require("xrpl");
+const { Xrpl, xrpToDrops, dropsToXrp } = require("xrpl");
 const { TxData } = require("xrpl-txdata");
 const { get_shop } = require("../../shop/get");
 const { get_looks } = require("../../looks/get");
@@ -22,13 +22,15 @@ module.exports = {
         const lookPrice = await get_looks({ params: { shop, id } });
         const shopData = await get_shop({ params: { shop }});
         // console.log(shopData.get('walletAddress'))
-        // console.log(lookPrice.get('price'))
+        // console.log(lookPrice.get('xrpPrice'))
+        // console.log(shopData.walletAddress)
         const Verify = new TxData();
         const request = {
           txjson: {
             TransactionType: "Payment",
-            Destination: shopData.get('walletAddress'),
-            Amount: xrpToDrops(lookPrice.get('price')),
+            Destination: shopData.walletAddress,
+            Amount: xrpToDrops(lookPrice.get('xrpPrice')),
+            // Amount: dropsToXrp
           },
         };
         const subscription = await Sdk.payload.createAndSubscribe(

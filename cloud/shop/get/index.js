@@ -4,14 +4,18 @@ const { exists } = require("../../utils/validate");
 
 module.exports = {
     get_shop: async ({ params}) => {
-        const { shop = 'jithendra-test-store.myshopify.com', walletAddress = '' } = params;
+        const { shop } = params;
         if (exists(shop)) {
           try {
             const shopQuery = parseUtils.query("Shop");
             shopQuery.equalTo("shop", shop);
             const shopInstance = await shopQuery.first({ useMasterKey: true });
             if (shopInstance) {
-             return shopInstance;
+              return{
+                shop: shopInstance.get('shop'),
+                walletAddress: shopInstance.get('walletAddress'),
+              }
+              
             } else {
               const { code, message } = errors.constructErrorObject(404);
               throw new Parse.Error(code, message);
