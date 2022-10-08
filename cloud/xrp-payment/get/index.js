@@ -43,6 +43,7 @@ module.exports = {
         return {
           qr: subscription.created.refs.qr_png,
           status: subscription.created.refs.websocket_status,
+          walletAddress: shopData.walletAddress,
         };
       } catch (e) {
         console.error(e);
