@@ -33,7 +33,10 @@ const {
   post_charges,
   delete_charges,
 } = require("./cloud/charges/get");
-const { get_xrp_payment, verify_xrp_payment } = require("./cloud/xrp-payment/get");
+const {
+  get_xrp_payment,
+  verify_xrp_payment,
+} = require("./cloud/xrp-payment/get");
 const { put_shop } = require("./cloud/shop/put");
 const { get_shop } = require("./cloud/shop/get");
 
@@ -198,7 +201,7 @@ app.get("/api/get_products", async (req, res) => {
 app.post("/api/post_looks", async (req, res) => {
   try {
     const { shop, name, price, xrpPrice, medias, products, id } = req.body;
-   
+
     const data = await post_looks({
       params: { shop, name, price, xrpPrice, medias, products, id },
     });
@@ -323,17 +326,17 @@ app.post("/api/delete_charges", async (req, res) => {
   }
 });
 
-app.get('/api/get_shop', async (req, res) => {
-  try{
+app.get("/api/get_shop", async (req, res) => {
+  try {
     const { shop } = req.query;
     const data = await get_shop({
-      params: { shop }
-    })
+      params: { shop },
+    });
     res.status(200).json(data);
-  } catch(e){
+  } catch (e) {
     res.status(500).json(e);
   }
-})
+});
 
 app.post("/api/put_shop", async (req, res) => {
   try {
