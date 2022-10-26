@@ -3,6 +3,10 @@
 
 The API is a NodeJS server built using ParseJS, MongoDB, Expressa and is hosted on AWS.
 
+## Demo
+
+  [Screencapture demo on Youtube](https://youtu.be/HlNEriQgSpc)
+
 # Folder structure
   - .ebextensions
   - nginx
