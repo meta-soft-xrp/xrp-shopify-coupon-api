@@ -59,7 +59,7 @@ module.exports = {
     const { txid } = params;
     if (exists(txid)) {
       try {
-        const Verify = new TxData();
+        const Verify = new TxData(["wss://s.altnet.rippletest.net:51233"]);
         const VerifiedResult = await Verify.getOne(txid);
         console.log("Verifide Result: ", VerifiedResult);
         return VerifiedResult;
