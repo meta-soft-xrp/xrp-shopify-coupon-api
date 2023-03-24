@@ -121,7 +121,7 @@ app.get("/widget", async (req, res) => {
 			iframe.style.border = "none";
 			iframe.width = "100%";
 			iframe.height = "672px"
-			const shopLookAppEle = document.querySelector('#frangout-shop-look-app');
+			const shopLookAppEle = document.querySelector('#xrp-shop-curation-app');
 			if (shopLookAppEle) {
 				shopLookAppEle.style.width = "100%";
 				shopLookAppEle.style.height = "672px";
@@ -143,7 +143,7 @@ app.get("/widget", async (req, res) => {
 					document.body.appendChild(iframe)
 				}
 			}
-			if (document.location.hash === "#frangout-shop-look-app-wrapper") {
+			if (document.location.hash === "#xrp-shop-curation-app-wrapper") {
 				iframe.scrollIntoView({ behaviour: 'smooth' })
 			}
 	`);
@@ -362,12 +362,6 @@ app.get("*", (req, res) => {
   }
   const indexFilePath = path.join(__dirname, ".", "index.html");
   fs.readFile(indexFilePath, "utf8", function (err, data) {
-    if (shop && session) {
-      data = data.replace(
-        "<!--__SHELL_HTML_CONTENT__-->",
-        `<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="3701b868-73d8-4697-93df-59113ec756ad";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>`
-      );
-    }
     res.send(data);
   });
 });
