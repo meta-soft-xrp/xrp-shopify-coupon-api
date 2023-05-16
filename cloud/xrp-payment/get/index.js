@@ -18,17 +18,17 @@ module.exports = {
           process.env.XUMM_API_KEY,
           process.env.XUMM_API_SECRET_KEY
         );
-        const lookPrice = await get_looks({ params: { shop, id } });
+        const look = await get_looks({ params: { shop, id } });
         const shopData = await get_shop({ params: { shop } });
         // console.log(shopData.get('walletAddress'))
-        // console.log(lookPrice.get('xrpPrice'))
+        // console.log(look.get('xrpPrice'))
         // console.log(shopData.walletAddress)
         const Verify = new TxData();
         const request = {
           txjson: {
             TransactionType: "Payment",
             Destination: shopData.walletAddress,
-            Amount: xrpToDrops(lookPrice.get("xrpPrice")),
+            Amount: xrpToDrops(look.get("xrpPrice")),
             // Amount: dropsToXrp
           },
         };
@@ -60,13 +60,14 @@ module.exports = {
     if (exists(txid)) {
       try {
         const Verify = new TxData(["wss://s.altnet.rippletest.net:51233"], {
-          AllowNoFullHistory: true
-        })
+          AllowNoFullHistory: true,
+        });
         const VerifiedResult = await Verify.getOne(txid);
         console.log("Verifide Result: ", VerifiedResult);
         return VerifiedResult;
       } catch (e) {
-        throw e;
+        const { code, message } = errors.constructErrorObject(400);
+        throw new Parse.Error(code, message);
       }
     } else {
       const { code, message } = errors.constructErrorObject(400);

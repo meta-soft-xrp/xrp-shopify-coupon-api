@@ -27,6 +27,7 @@ const { get_products } = require("./cloud/products/get");
 const { get_scripts } = require("./cloud/scripts/get");
 const { post_views } = require("./cloud/views/post");
 const { get_views } = require("./cloud/views/get");
+const { post_coupon } = require("./cloud/coupon/post");
 const https = require("https");
 const {
   get_charges,
@@ -344,6 +345,20 @@ app.post("/api/put_shop", async (req, res) => {
 
     const data = await put_shop({
       params: { shop, walletAddress },
+    });
+    res.status(200).json(data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json(e);
+  }
+});
+
+app.post("/api/post_coupon", async (req, res) => {
+  try {
+    const { txid, shop, lookId } = req.body;
+
+    const data = await post_coupon({
+      params: { txid, shop, lookId },
     });
     res.status(200).json(data);
   } catch (e) {

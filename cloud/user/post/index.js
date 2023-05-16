@@ -20,7 +20,9 @@ module.exports = {
           throw new Parse.Error(code, message);
         }
       } catch (e) {
-        throw e;
+        console.error(e);
+        const { code, message } = errors.constructErrorObject(500);
+        throw new Parse.Error(code, message);
       }
     } else {
       const { code, message } = errors.constructErrorObject(400);

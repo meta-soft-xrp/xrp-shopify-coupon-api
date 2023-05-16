@@ -3,50 +3,68 @@ const errors = require("../../utils/error-handling/index");
 const parseUtils = require("../../utils/parse-utils/index");
 const generator = require("generate-password");
 const shopifyInstance = require("../../utils/shopify-instance");
-
+const { verify_xrp_payment } = require("../../xrp-payment/get");
+const { get_looks } = require("../../looks/get");
 module.exports = {
   post_coupon: async ({ params }) => {
-    const { shop, discount } = params;
-    if (exists(shop)) {
+    const { txid, shop, lookId } = params;
+    if (exists(txid, shop, lookId)) {
       try {
+        const verificationStatus = await verify_xrp_payment({
+          params: { txid },
+        });
         const shopQuery = parseUtils.query("Shop");
         shopQuery.equalTo("shop", shop);
         let shopInstance = await shopQuery.first({ useMasterKey: true });
         if (shopInstance) {
-          console.log(shopInstance.get("accessToken"));
           const shopifyNodeInstance = shopifyInstance({
             shopName: shop,
             accessToken: shopInstance.get("accessToken"),
           });
 
-          const getPriceRuleId = async ({ targetType, value }) => {
+          const look = await get_looks({ params: { shop, id: lookId } });
+          const discountCode = generator.generate({
+            symbols: false,
+            uppercase: false,
+            numbers: false,
+            lowercase: true,
+            excludeSimilarCharacters: true,
+            length: 6,
+            strict: true,
+          });
+
+          const getPriceRule = async () => {
             try {
-              const { id: priceRuleId } =
-                await shopifyNodeInstance.priceRule.create({
-                  title: "HBAR SHOP DISCOUNT " + Math.random(),
-                  target_type: "line_item",
-                  allocation_method: "across",
-                  target_selection: "all",
-                  customer_selection: "all",
-                  starts_at: new Date().toISOString(),
-                  once_per_customer: true,
-                  title:
-                    new Date().toGMTString() + " - " + "HBAR Payment Discount",
-                  value: "-100",
-                  value_type: "percentage",
-                });
-              return priceRuleId;
+              const priceRule = await shopifyNodeInstance.priceRule.create({
+                target_type: "line_item",
+                allocation_method: "each",
+                target_selection: "entitled",
+                customer_selection: "all",
+                starts_at: new Date().toISOString(),
+                entitled_product_ids: look.get("products").map((p) => p.id),
+                prerequisite_product_ids: look.get("products").map((p) => p.id),
+                once_per_customer: true,
+                title: discountCode,
+                value: "-100",
+                value_type: "percentage",
+                prerequisite_to_entitlement_quantity_ratio: {
+                  prerequisite_quantity: 1,
+                  entitled_quantity: look.get("products").map((p) => p.id)
+                    .length,
+                },
+                allocation_limit: look.get("products").map((p) => p.id).length,
+              });
+              return priceRule;
             } catch (e) {
-              console.error("SDFSDFDSF ", e);
+              console.error(e);
+              const { code, message } = errors.constructErrorObject(
+                e.code || e.statusCode || 500,
+                e
+              );
             }
           };
 
-          const { targetType, value } = {
-            targetType: "shipping_line",
-            value: 100,
-          };
-
-          const priceRuleId = await getPriceRuleId({ targetType, value });
+          const priceRule = await getPriceRule();
 
           //   const { priceRuleId = await getPriceRuleId({ targetType, value }) } = discount;
 
@@ -62,34 +80,27 @@ module.exports = {
           //     }
           //   }
 
-          if (priceRuleId) {
-            const discountInstance = parseUtils.instance("Discount");
-            discountInstance.set("priceRuleId", priceRuleId);
-            discountInstance.set("targetType", targetType);
-            discountInstance.set("discountValue", value);
-
-            const code = generator.generate({
-              symbols: false,
-              uppercase: false,
-              numbers: false,
-              lowercase: true,
-              excludeSimilarCharacters: true,
-              length: 6,
-              strict: true,
-            });
-
+          if (priceRule) {
+            // const discountInstance = parseUtils.instance("Discount");
+            // discountInstance.set("priceRuleId", priceRule.id);
+            // discountInstance.set("targetType", targetType);
+            // discountInstance.set("discountValue", value);
             const discountCodeInstance =
-              await shopifyNodeInstance.discountCode.create(priceRuleId, {
-                code,
+              await shopifyNodeInstance.discountCode.create(priceRule.id, {
+                code: discountCode,
               });
             if (discountCodeInstance) {
-              discountInstance.set("discount", discountCodeInstance);
-              const acl = new Parse.ACL();
-              acl.setPublicWriteAccess(false);
-              acl.setPublicReadAccess(false);
-              discountInstance.setACL(acl);
-              const savedDiscount = await discountInstance.save(null);
-              return savedDiscount;
+              console.log(discountCodeInstance);
+              // discountInstance.set("discount", discountCodeInstance);
+              // const acl = new Parse.ACL();
+              // acl.setPublicWriteAccess(false);
+              // acl.setPublicReadAccess(false);
+              // discountInstance.setACL(acl);
+              // const savedDiscount = await discountInstance.save(null);
+              return {
+                tx: verificationStatus,
+                discount: discountCodeInstance,
+              };
             } else {
               const { code, message } = errors.constructErrorObject(400);
               throw new Parse.Error(code, message);

@@ -16,16 +16,18 @@ module.exports = {
             shopName: shop,
             accessToken: shopInstance.get("accessToken"),
           });
-          const deletedCharge = await shopifyNodeInstance.recurringApplicationCharge.delete(
-            chargeId
-          );
+          const deletedCharge =
+            await shopifyNodeInstance.recurringApplicationCharge.delete(
+              chargeId
+            );
           return deletedCharge;
         } else {
           const { code, message } = errors.constructErrorObject(400);
           throw new Parse.Error(code, message);
         }
       } catch (e) {
-        throw e;
+        const { code, message } = errors.constructErrorObject(500);
+        throw new Parse.Error(code, message);
       }
     } else {
       const { code, message } = errors.constructErrorObject(400);
@@ -88,14 +90,13 @@ module.exports = {
             shopName: shop,
             accessToken: shopInstance.get("accessToken"),
           });
-          const recurringApplicationCharge = await shopifyNodeInstance.recurringApplicationCharge.create(
-            {
+          const recurringApplicationCharge =
+            await shopifyNodeInstance.recurringApplicationCharge.create({
               name: "PRO",
               price: parseFloat(4.99),
               return_url: returnURL,
               test: process.env.ENABLE_TEST_DUMMY_PAYMENTS === "true",
-            }
-          );
+            });
           return recurringApplicationCharge;
         } else {
           const { code, message } = errors.constructErrorObject(400);
@@ -103,7 +104,9 @@ module.exports = {
         }
       } catch (e) {
         console.error(e);
-        throw e;
+        console.error(e);
+        const { code, message } = errors.constructErrorObject(500);
+        throw new Parse.Error(code, message);
       }
     } else {
       const { code, message } = errors.constructErrorObject(400);
@@ -133,7 +136,8 @@ module.exports = {
           throw new Parse.Error(code, message);
         }
       } catch (e) {
-        throw e;
+        const { code, message } = errors.constructErrorObject(500);
+        throw new Parse.Error(code, message);
       }
     } else {
       const { code, message } = errors.constructErrorObject(400);
@@ -146,7 +150,9 @@ module.exports = {
         const data = await this.get_charges(req);
         return { data };
       } catch (e) {
-        throw e;
+        console.error(e);
+        const { code, message } = errors.constructErrorObject(500);
+        throw new Parse.Error(code, message);
       }
     });
   },
