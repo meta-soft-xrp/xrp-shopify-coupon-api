@@ -59,7 +59,7 @@ module.exports = {
         // res.cookie('shoplooksplatform', 'shopify', { maxAge: thirtyDays, path: '/', domain: '.frangout.com', httpOnly: false, secure: false, });
         res.redirect(
           302,
-          `${process.env.SHOPIFY_DASHBOARD_SERVER_FORWARDING_ADDRESS}?host=${host}&userToken=${userToken}`
+          `${process.env.SHOPIFY_DASHBOARD_SERVER_FORWARDING_ADDRESS}?host=${host}&userToken=${userToken}&baseCurrency=${shopifyShopData.currency}`
         );
       } catch (e) {
         console.error(e);

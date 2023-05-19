@@ -41,8 +41,8 @@ module.exports = {
                 target_selection: "entitled",
                 customer_selection: "all",
                 starts_at: new Date().toISOString(),
-                entitled_product_ids: look.get("products").map((p) => p.id),
                 prerequisite_product_ids: look.get("products").map((p) => p.id),
+                entitled_product_ids: look.get("products").map((p) => p.id),
                 once_per_customer: true,
                 title: discountCode,
                 value: "-100",
@@ -52,7 +52,6 @@ module.exports = {
                   entitled_quantity: look.get("products").map((p) => p.id)
                     .length,
                 },
-                allocation_limit: look.get("products").map((p) => p.id).length,
               });
               return priceRule;
             } catch (e) {
