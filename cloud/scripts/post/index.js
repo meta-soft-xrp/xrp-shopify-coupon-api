@@ -33,6 +33,7 @@ module.exports = {
           throw new Parse.Error(code, message);
         }
       } catch (e) {
+        console.error(e);
         const { code, message } = errors.constructErrorObject(500);
         throw new Parse.Error(code, message);
       }
