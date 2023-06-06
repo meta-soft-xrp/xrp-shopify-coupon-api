@@ -28,6 +28,8 @@ const { get_scripts } = require("./cloud/scripts/get");
 const { post_views } = require("./cloud/views/post");
 const { get_views } = require("./cloud/views/get");
 const { post_coupon } = require("./cloud/coupon/post");
+const { create_nft } = require("./cloud/nfts/post");
+
 const https = require("https");
 const {
   get_charges,
@@ -361,6 +363,20 @@ app.post("/api/post_coupon", async (req, res) => {
       params: { txid, shop, lookId },
     });
     res.status(200).json(data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json(e);
+  }
+});
+
+app.post("/api/create_nft", async (req, res) => {
+  try {
+    const { seed, uri, transferFee, flags, method } = req.body;
+    const data = await create_nft({
+      params: { seed, uri, transferFee, flags, method },
+    });
+    res.status(200).json(data);
+
   } catch (e) {
     console.error(e);
     res.status(500).json(e);
