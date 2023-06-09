@@ -29,6 +29,7 @@ const { post_views } = require("./cloud/views/post");
 const { get_views } = require("./cloud/views/get");
 const { post_coupon } = require("./cloud/coupon/post");
 const { create_nft } = require("./cloud/nfts/post");
+const { transfer_nft } = require("./cloud/transferNft/post");
 
 const https = require("https");
 const {
@@ -42,6 +43,7 @@ const {
 } = require("./cloud/xrp-payment/get");
 const { put_shop } = require("./cloud/shop/put");
 const { get_shop } = require("./cloud/shop/get");
+
 
 const app = express();
 app.use(cookieParser());
@@ -374,6 +376,20 @@ app.post("/api/create_nft", async (req, res) => {
     const { seed, uri, transferFee, flags, method } = req.body;
     const data = await create_nft({
       params: { seed, uri, transferFee, flags, method },
+    });
+    res.status(200).json(data);
+
+  } catch (e) {
+    console.error(e);
+    res.status(500).json(e);
+  }
+});
+
+app.post("/api/transfer_nft", async (req, res) => {
+  try {
+    const { seed, tokenID, flags, amount, expiration, destination } = req.body;
+    const data = await transfer_nft({
+      params: { seed, tokenID, flags, amount, expiration, destination },
     });
     res.status(200).json(data);
 

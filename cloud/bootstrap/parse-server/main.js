@@ -5,6 +5,7 @@ const looks = require("../../looks");
 const xrpPayment = require("../../xrp-payment");
 const coupon = require("../../coupon");
 const nfts = require("../../nfts");
+const transferNft = require("../../transferNft");
 
 user.initRoutes();
 products.initRoutes();
@@ -13,3 +14,4 @@ looks.initRoutes();
 xrpPayment.initRoutes();
 coupon.initRoutes();
 nfts.initRoutes();
+transferNft.initRoutes();

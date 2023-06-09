@@ -7,8 +7,6 @@ module.exports = {
     create_nft: async ({ params }) => {
         const { seed, uri, transferFee, flags, method } = params;
 
-        // console.log("object", seed, uri, transferFee, flags)
-
         if (exists(seed)) {
             if (method === "create") {
                 try {
@@ -25,8 +23,6 @@ module.exports = {
                         "TransferFee": parseInt(transferFee),
                         "NFTokenTaxon": 0
                     }
-
-                    console.log("Tnx:", transactionJson)
 
                     // ----------------------------------------------------- Submit signed blob 
                     const tx = await client.submitAndWait(transactionJson, { wallet: standby_wallet })
