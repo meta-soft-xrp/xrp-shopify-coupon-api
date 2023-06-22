@@ -8,7 +8,7 @@ module.exports = {
 
         if (exists(id)) {
             try {
-
+                console.log("Api Hit", id);
             } catch (e) {
                 throw e;
             }

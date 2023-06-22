@@ -44,6 +44,7 @@ const {
 } = require("./cloud/xrp-payment/get");
 const { put_shop } = require("./cloud/shop/put");
 const { get_shop } = require("./cloud/shop/get");
+const { get_badge } = require("./cloud/badgeNFT/get");
 
 
 const app = express();
