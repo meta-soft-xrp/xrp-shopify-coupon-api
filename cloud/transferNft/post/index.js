@@ -2,6 +2,7 @@ const { exists } = require("../../utils/validate/index");
 const errors = require("../../utils/error-handling/index");
 const parseUtils = require("../../utils/parse-utils/index");
 const xrpl = require("xrpl");
+const { XummSdk } = require('xumm-sdk');
 
 module.exports = {
     transfer_nft: async ({ params }) => {
@@ -12,17 +13,20 @@ module.exports = {
         await client.connect()
         const standby_wallet = xrpl.Wallet.fromSeed(seed)
 
-        console.log(standby_wallet)
-        console.log("Connected")
+
+        const api_key = "2a97b0b3-cc30-48be-8129-45c7f5985721"
+        const api_secret = "f7952171-6134-4dca-b6e6-19f7e60dc406"
+
+        const xumm = new XummSdk(process.env.XUMM_API_KEY_NFT, process.env.XUMM_API_SECRET_KEY_NFT);
+
         if (seed) {
-            console.log(seed + " SeeD")
+
             try {
                 const net = "wss://s.altnet.rippletest.net:51233"
                 const client = new xrpl.Client(net)
                 await client.connect()
                 const standby_wallet = xrpl.Wallet.fromSeed(seed)
 
-                console.log(standby_wallet)
 
                 //----------- Prepare expiration -----------//
                 var expirationDate = null
@@ -32,7 +36,6 @@ module.exports = {
                 d.setDate(d.getDate() + parseInt(days))
                 var expirationDate = xrpl.isoTimeToRippleTime(d)
 
-                console.log(amount, "amount")
 
                 //------------------------- Prepare transaction ---------------------------
                 let transactionBlob = {
@@ -41,20 +44,17 @@ module.exports = {
                     "NFTokenID": tokenID,
                     "Amount": amount,
                     "Flags": parseInt(flags),
+                    "Destination": destination
                 }
 
 
 
-                // if (expirationDate != null) {
-                //     transactionBlob.Expiration = expirationDate
-                //     transactionBlob.Destination = destination
-                // }
-                console.log("TRANSACTIONBLOB out if", transactionBlob)
-
+                if (expirationDate != null) {
+                    transactionBlob.Expiration = expirationDate
+                    transactionBlob.Destination = destination
+                }
 
                 const tx = await client.submitAndWait(transactionBlob, { wallet: standby_wallet })
-
-                console.log("TNX", tx)
 
                 let nftSellOffers;
                 try {
@@ -67,7 +67,20 @@ module.exports = {
                     console.log("Error", err)
                 }
 
-                console.log("NFT sell offers", nftSellOffers)
+                if (nftSellOffers?.result?.offers) {
+                    const request = {
+                        txjson: {
+                            Account: nftSellOffers.result.offers[0].destination,
+                            NFTokenSellOffer: nftSellOffers.result.offers[0].nft_offer_index,
+                            TransactionType: "NFTokenAcceptOffer"
+                        }
+                    }
+                    const payload = await xumm.payload.create(request, true);
+                    console.log("Payload", payload)
+                    nftSellOffers.payload = payload;
+                    console.log(nftSellOffers)
+
+                }
 
                 return nftSellOffers;
 
