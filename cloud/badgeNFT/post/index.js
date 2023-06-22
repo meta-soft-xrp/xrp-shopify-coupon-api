@@ -15,7 +15,7 @@ module.exports = {
                 badgesInstance.set('image', image);
 
                 const data = await badgesInstance.save(null);
-                console.log(data)
+
                 return data;
             }
             catch (err) { };
