@@ -10,7 +10,7 @@ module.exports = {
             try {
                 console.log(title, description, image);
                 const badgesInstance = parseUtils.instance('Badges')
-                badgesInstance.set('title', title);
+                badgesInstance.set('name', title);
                 badgesInstance.set('description', description);
                 badgesInstance.set('image', image);
 

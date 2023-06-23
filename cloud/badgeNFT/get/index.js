@@ -8,7 +8,20 @@ module.exports = {
 
         if (exists(id)) {
             try {
-                console.log("Api Hit", id);
+
+                const badgesQuery = parseUtils.query("Badges");
+                badgesQuery.equalTo("objectId", id)
+                badgesQuery.descending("createdAt");
+                const data = id ? await badgesQuery.first() : await badgesQuery.find();
+
+                if (data.id === id) {
+                    return {
+                        name: data.get('name'),
+                        description: data.get('description'),
+                        image: data.get('image'),
+                    }
+                }
+
             } catch (e) {
                 throw e;
             }
