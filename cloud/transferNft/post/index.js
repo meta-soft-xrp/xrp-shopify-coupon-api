@@ -49,10 +49,9 @@ module.exports = {
 
 
 
-                if (expirationDate != null) {
-                    transactionBlob.Expiration = expirationDate
-                    transactionBlob.Destination = destination
-                }
+
+                transactionBlob.Destination = destination
+
 
                 const tx = await client.submitAndWait(transactionBlob, { wallet: standby_wallet })
 
